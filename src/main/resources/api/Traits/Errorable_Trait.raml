@@ -1,0 +1,54 @@
+#%RAML 1.0 Trait
+responses:
+  400:
+    body:
+      application/json:
+        type: !include ../Data_Types/Error_DataType.raml
+        example: |
+          {
+            "error code": "Bad Request",
+            "error description": "400 Bad Request Error is an HTTP status code which means the request you sent to the server was somehow incorrect or corrupt and the srver could not understand it"
+          }
+  401:
+    body:
+      application/json:
+        type: !include ../Data_Types/Error_DataType.raml
+        example: |
+          {
+              "error code": "Unauthorised Request",
+              "error description": "This error indicates that the request sent by the client was not authenticated"
+          }
+  404:
+    body:
+      application/json:
+        type: !include ../Data_Types//Error_DataType.raml
+        example: |
+          {          
+            "error code": "Resource nor found",
+            "error description": "404 error means that the resource could not be found on the server"
+          }
+  500:
+    body:
+      application/json:
+        type: !include ../Data_Types/Error_DataType.raml
+        example: |
+          {
+            "error code": "Server Error",
+            "error description": "The server encountered a specific internal error due to unexpected conditions"
+          }
+  503:
+    body:
+      application/json:
+        type: !include ../Data_Types/Error_DataType.raml
+        example: |
+          {
+            "error code": "Service Unavailable",
+            "error description": "This means the problem is in the website server due to which the the service can not be reached"
+          }
+            
+
+          
+
+          
+
+          

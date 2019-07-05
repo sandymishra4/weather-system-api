@@ -1,0 +1,55 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/68fff839-51c2-4f4e-a5a9-e43bfbb5013e/ # 
+title: Weather System API
+description: This is a system API to retrieve weather and cities information.
+version: 0.1
+mediaType: application/json
+protocols: [HTTPS]
+securitySchemes:
+  basic:
+    description: | 
+      This API uses basic authentication
+    type: Basic Authentication
+
+traits:
+  Errorable: !include Traits/Errorable_Trait.raml
+
+types: 
+  WeatherRequest: !include Data_Types/WeatherRequest.raml
+  CitiesRequest: !include Data_Types/CitiesRequest.raml
+
+/weather: 
+  post:
+    description: Fetches weather report for major cities.
+    is: [Errorable]
+    body:
+      type: WeatherRequest
+      example: !include Examples/WeatherRequest_Example.json
+    responses:
+      200:
+        description: Successfully retrieved weather information.
+        body:
+          example: !include Examples/WeatherResponse_Example.json
+/cities:
+  post:
+    description: Fetches cities of a Country.
+    is: [Errorable]
+    body:
+      type: CitiesRequest
+      example: !include Examples/CitiesRequest_Example.json
+    responses:
+      200:
+        description: Successfully retrieved cities information.
+        body:
+          example: !include Examples/CitiesResponse_Example.json
+            
+
+        
+
+            
+
+        
+
+
+
+

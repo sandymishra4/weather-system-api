@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="e7182dd9-9af7-46fd-b20e-135445cdb51c" >
+		<wsc:connection wsdlLocation="wsdl/global-weather.wsdl" service="GlobalWeather" port="GlobalWeatherSoap" address="${soapURL}" />
+	</wsc:config>
+	<flow name="cities-subflow" doc:id="71f46e2b-59f1-42ff-8953-e0e41b302b01" >
+		<logger level="INFO" doc:name="Logger" doc:id="9f131e25-42e8-4a60-b6c4-d0ea30ad0ab5" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="0ba68eea-2674-4a9c-9d1f-4e80c837f41b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.webserviceX.NET
+---
+{
+	ns0#GetCitiesByCountry: {
+		ns0#CountryName: payload.CountryName
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="3" doc:name="Until Successful" doc:id="d741ba60-a5e6-4684-acb2-f11453d5e075" >
+			<wsc:consume doc:name="Consume" doc:id="4ed9202d-f872-4942-ad33-fa7ae4adbd65" config-ref="Web_Service_Consumer_Config" operation="GetCitiesByCountry" />
+		</until-successful>
+		<ee:transform doc:name="Transform Message" doc:id="7333f374-9baf-4375-887c-5bd4b677c4d8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://www.webserviceX.NET
+---
+(payload.ns0#GetCitiesByCountryResponse.ns0#NewDataSet.ns0#Table map ({
+	Country: $.Country,
+	City: $.City
+})) ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

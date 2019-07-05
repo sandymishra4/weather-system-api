@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<flow name="weather-subflow" doc:id="e86e0f54-87c4-49b4-8a32-f5b6d52383e9" >
+		<logger level="INFO" doc:name="Logger" doc:id="04ac5e8d-68e5-4259-b380-5364f87869f3" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="a2a454e7-fc78-4112-b5ba-4ba135afbb1b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.webserviceX.NET
+---
+{
+	ns0#GetWeather: {
+		ns0#CityName: payload.CityName,
+		ns0#CountryName: payload.CountryName
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="5" doc:name="Until Successful" doc:id="15e684a9-e75e-4cfc-9df5-ae90e2655a11" >
+			<wsc:consume operation="GetWeather" doc:name="Consume" doc:id="341326fa-73f3-4559-84e8-d86c431b89f2" config-ref="Web_Service_Consumer_Config"/>
+		</until-successful>
+		<ee:transform doc:name="Transform Message" doc:id="752fba3e-4b0d-4468-803c-97c17b82ba40" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+ns ns0 http://www.webserviceX.NET
+---
+(payload.ns0#GetWeatherResponse.ns0#NewDataSet map ({
+	Location: $.Location,
+	Time: $.Time,
+	Wind: $.Wind,
+	Visibility: $.Visibility,
+	SkyConditions: $.SkyConditions,
+	Temperature: $.Temperature,
+	DewPoint: $.DewPoint,
+	RelativeHumidity: $.RelativeHumidity,
+	Status: $.Status
+}))]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

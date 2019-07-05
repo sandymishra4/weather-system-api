@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="weather-system-api-test-suite.xml" />
+	<munit:test name="weather-system-api-test-suite-weather-subflowTest" description="Test" doc:id="9f321eab-30f3-4225-9a1a-6d937fa081a4" >
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="6b9a0889-b057-4456-92b9-5de25d88d38c" >
+				<munit:payload value="#[MunitTools::getResourceAsString('test-data/weather-test-data.json')]" encoding="UTF-8" mediaType="application/json"/>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to weather-subflow" doc:id="39bbc26a-5b34-4bf1-af5c-dffaf3a80423" name="weather-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="2d5ce62b-70a7-467a-8981-7da96face7b6" processor=".*:.*"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="weather-system-api-test-suite-cities-subflowTest" description="Test" doc:id="fafdfb36-868c-44bc-a631-a50a3e2aa60e" >
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="aa41e09d-8ae0-4983-bb81-a2061fc62ebd" >
+				<munit:payload value="#[MunitTools::getResourceAsString('test-data/cities-test-data.json')]" encoding="UTF-8" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to cities-subflow" doc:id="dce03389-043a-4b2d-8d05-e541f27abfa4" name="cities-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="df673b84-313f-4ef0-b453-c5b269079851" processor=".*:.*"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

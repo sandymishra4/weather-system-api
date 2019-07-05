@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="json" format="json">
+      <types:shape format="weave" example="api/Examples/CitiesRequest_Example.json"><![CDATA[%dw 2.0
+type json = {| CountryName: String |} {"MetadataFormat": "json",
+"example": "{\"CountryName\":\"Australia\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+</types:mule>

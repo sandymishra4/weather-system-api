@@ -1,0 +1,10 @@
+http:
+  host: "0.0.0.0"
+  port:"8081"
+  basepath: "/api/*"
+
+SoapURL:"http://localhost:8080/GlobalWeather"
+inbound:
+  user: "admin"
+  password: "admin"
+keyStorePassword: "Assign1@"
